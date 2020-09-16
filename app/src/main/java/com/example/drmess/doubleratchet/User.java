@@ -3,6 +3,7 @@ package com.example.drmess.doubleratchet;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -12,6 +13,7 @@ import at.favre.lib.crypto.HKDF;
 import static java.lang.Integer.parseInt;
 
 public class User implements Serializable {
+
 
     int MAX_SKIP = 10;
 
@@ -155,7 +157,6 @@ public class User implements Serializable {
     public byte[] receivingMessage(){
 
         try{
-
             // Receiving data
             // Receiving Public Key
             int receivedPubKeyLength = parseInt(connect.getDataInputStream().readUTF());
@@ -191,14 +192,15 @@ public class User implements Serializable {
             chainKeyReceive = mac.doFinal("ChainKey".getBytes());
             nr += 1;
 
-            return ratchetCipher.decryptMessage(receivedEncryptedMessage, messageKey);
+            byte[] decMessage = ratchetCipher.decryptMessage(receivedEncryptedMessage, messageKey);
+
+
+            return decMessage;
 
 
         } catch (Exception e){
-            e.printStackTrace();
+            return "".getBytes();
         }
-
-        return null;
 
     }
 
@@ -266,7 +268,5 @@ public class User implements Serializable {
 
 
     }
-
-
 
 }

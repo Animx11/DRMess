@@ -1,5 +1,6 @@
 package com.example.drmess;
 
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -16,6 +17,12 @@ import com.example.drmess.doubleratchet.ConnectHandler;
 import com.example.drmess.doubleratchet.TypeConverter;
 import com.example.drmess.doubleratchet.User;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketAddress;
+
 public class ChatActivity extends AppCompatActivity {
 
     User user;
@@ -27,6 +34,13 @@ public class ChatActivity extends AppCompatActivity {
     EditText newMessageText;
     ConnectHandler connectHandler;
 
+    ReceiveMessage receiveMessage;
+    SendMessage sendMessage;
+
+    Boolean waitForConnectionIsClicked;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +49,7 @@ public class ChatActivity extends AppCompatActivity {
         Boolean isAlice = getIntent().getExtras().getBoolean("isAlice");
 
         connectHandler = new ConnectHandler();
+        waitForConnectionIsClicked = false;
 
         endConnectionButton = (Button)findViewById(R.id.endConnectionButton);
         sendMessageButton = (Button)findViewById(R.id.sendMessageButton);
@@ -57,29 +72,55 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    private void waitForMessage(){
+        receiveMessage = new ReceiveMessage();
+        receiveMessage.setReceiveMessageListener(new ReceiveMessage.ReceiveMessageInterface() {
+            @Override
+            public void receivedMessage(String message) {
+                if(message.compareTo("11ErrorSocket11") != 0) {
+                    textView.setText(message);
+                }
+                waitForMessage();
+            }
+        });
+        receiveMessage.execute(user);
+    }
 
     private View.OnClickListener waitForMessageClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+            if(!waitForConnectionIsClicked) {
+                receiveMessage = new ReceiveMessage();
+                receiveMessage.setReceiveMessageListener(new ReceiveMessage.ReceiveMessageInterface() {
+                    @Override
+                    public void receivedMessage(String message) {
+                        if(message.compareTo("11ErrorSocket11") != 0) {
+                            textView.setText(message);
+                        }
+                        waitForMessage();
+                    }
+                });
+                waitForConnectionIsClicked = true;
+                sendMessageButton.setEnabled(false);
+                newMessageText.setEnabled(false);
+
+                receiveMessage.execute(user);
+            } else {
+                waitForConnectionIsClicked = false;
+                sendMessageButton.setEnabled(true);
+                newMessageText.setEnabled(true);
+                receiveMessage.cancel(true);
+            }
+
             /*
-            receiveMessage = new ReceiveMessage();
-            receiveMessage.setReceiveMessageListener(new ReceiveMessage.ReceiveMessageInterface() {
-                @Override
-                public void receivedMessage(String receivedMessage) {
-                    showMessage(receivedMessage);
-                }
-            });
-            receiveMessage.execute(user);
-             */
-            ReceiveMessage receiveMessage = new ReceiveMessage();
-            receiveMessage.execute(user);
             try {
                 String message = receiveMessage.get();
                 textView.setText(message);
-                v.invalidate();
             } catch (Exception e){
                 e.printStackTrace();
             }
+            */
         }
     };
 
@@ -87,15 +128,10 @@ public class ChatActivity extends AppCompatActivity {
     private View.OnClickListener sendMessageClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            /*
-            String message = newMessageText.getText().toString();
-            user.messageToSend = message;
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.execute(user);
-             */
-            SendMessage sendMessage = new SendMessage();
-            user.messageToSend = newMessageText.getText().toString();
-            sendMessage.execute(user);
+                sendMessage = new SendMessage();
+                user.messageToSend = newMessageText.getText().toString();
+                newMessageText.setText("");
+                sendMessage.execute(user);
 
         }
     };
@@ -113,7 +149,6 @@ public class ChatActivity extends AppCompatActivity {
         user = null;
         startActivity(i);
     }
-
 
 
 }

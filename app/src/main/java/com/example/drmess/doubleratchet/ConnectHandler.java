@@ -19,6 +19,7 @@ public class ConnectHandler {
     public static synchronized void setSocket(Socket socket){
         try {
             ConnectHandler.socket = socket;
+            socket.setSoTimeout(750);
             dataInputStream = new DataInputStream(socket.getInputStream());
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
         } catch(Exception e){
