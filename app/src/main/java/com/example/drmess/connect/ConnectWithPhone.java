@@ -25,19 +25,6 @@ public class ConnectWithPhone extends AsyncTask<String, Void, User> {
     protected User doInBackground(String... strings) {
 
         try{
-/*
-            User alice = new User();
-            Connect connect = new Connect();
-
-            System.out.println("Click");
-
-            String ip = strings[0];
-
-            connect.connect(ip, 6666);
-
-            alice.initializeMasterKeyExchange(true, connect);
-            //alice.sendMessage("TestMessage");
-*/
 
             TypeConverter typeConverter = new TypeConverter();
             String ip = strings[0];

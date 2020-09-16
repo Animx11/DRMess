@@ -84,52 +84,6 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, WaitToConnectActivity.class);
         startActivity(i);
 
-/*
-        if(!createdServer){
-
-            waitForConnect = new WaitForConnect();
-            waitForConnect.setWaitForConnectListener(new WaitForConnect.WaitForConnectInterface(){
-                @Override
-                public void onConnect(){
-                    test();
-                }
-                @Override
-                public void waiting(){
-
-                }
-            });
-
-            System.out.println("Created Server");
-            createdServer = true;
-
-            connectButton.setEnabled(false);
-            inputId.setEnabled(false);
-            serverWait.setText("Waiting for connection");
-            createServerButton.setText("Close server");
-
-
-            waitForConnect.execute();
-
-        } else{
-
-            System.out.println("Attempt to close server");
-            waitForConnect.cancel(false);
-
-            while(!waitForConnect.isCancelled()){
-                System.out.println("Waiting for closing connection");
-            }
-
-            System.out.println("Server closed");
-            createdServer = false;
-
-            serverWait.setText("");
-            createServerButton.setText("Create server");
-
-            inputId.setEnabled(true);
-            connectButton.setEnabled(true);
-
-        }
-*/
     }
 
     static {

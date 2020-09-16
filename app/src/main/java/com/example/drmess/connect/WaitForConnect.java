@@ -31,7 +31,6 @@ public class WaitForConnect extends AsyncTask<String, Void, Void> {
             socket = serverSocket.accept();
             connectHandler.setSocket(socket);
             listener.onConnect();
-            //bob.initializeMasterKeyExchange(false);
 
 
         } catch (Exception e){
