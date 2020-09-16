@@ -14,6 +14,9 @@ public class WaitForConnect extends AsyncTask<String, Void, Void> {
     }
 
     private WaitForConnectInterface listener;
+    ConnectHandler connectHandler;
+    ServerSocket serverSocket;
+    Socket socket;
 
     public WaitForConnect() {
         this.listener = null;
@@ -23,9 +26,9 @@ public class WaitForConnect extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... strings) {
         try{
 
-            ConnectHandler connectHandler = new ConnectHandler();
-            ServerSocket serverSocket = new ServerSocket(6666);
-            Socket socket = serverSocket.accept();
+            connectHandler = new ConnectHandler();
+            serverSocket = new ServerSocket(6666);
+            socket = serverSocket.accept();
             connectHandler.setSocket(socket);
             listener.onConnect();
             //bob.initializeMasterKeyExchange(false);
@@ -45,4 +48,12 @@ public class WaitForConnect extends AsyncTask<String, Void, Void> {
 
     }
 
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        connectHandler = null;
+        socket = null;
+        serverSocket = null;
+
+    }
 }

@@ -148,8 +148,11 @@ public class User implements Serializable {
             connect.getDataOutputStream().write(encryptedMessage);
 
 
+
+
         } catch (Exception e){
             e.printStackTrace();
+
         }
 
     }

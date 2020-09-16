@@ -1,5 +1,6 @@
 package com.example.drmess;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,6 +9,7 @@ import com.example.drmess.doubleratchet.Connect;
 import com.example.drmess.doubleratchet.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.jakewharton.processphoenix.ProcessPhoenix;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,6 +17,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.io.PrintWriter;
 
 public class WaitToConnectActivity extends AppCompatActivity {
 
@@ -49,9 +53,11 @@ public class WaitToConnectActivity extends AppCompatActivity {
     }
 
     public void closeServer(){
-        waitForConnect.cancel(true);
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+
+            Context context = getApplicationContext();
+            ProcessPhoenix.triggerRebirth(context);
+
+
     }
 
     private View.OnClickListener closeServerClick = new View.OnClickListener() {

@@ -6,6 +6,7 @@ import com.example.drmess.doubleratchet.User;
 
 public class SendMessage extends AsyncTask<User, Void, Void> {
 
+
     @Override
     protected Void doInBackground(User... users) {
 
@@ -15,4 +16,7 @@ public class SendMessage extends AsyncTask<User, Void, Void> {
 
         return null;
     }
+
+
+
 }
